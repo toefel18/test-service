@@ -20,7 +20,7 @@ public class Reservation {
     private String clientName;
 
     @Column(nullable = false, updatable = false)
-    private ZonedDateTime reservationTimestamp;
+    private long reservationTimestamp;
 
     @Column(nullable = false)
     private long amount;
@@ -33,7 +33,7 @@ public class Reservation {
         this.product = product;
         this.clientName = clientName;
         this.amount = amount;
-        this.reservationTimestamp = ZonedDateTime.now();
+        this.reservationTimestamp = System.currentTimeMillis();
     }
 
     public Long getId() {
@@ -68,11 +68,11 @@ public class Reservation {
         this.clientName = clientName;
     }
 
-    public ZonedDateTime getReservationTimestamp() {
+    public long getReservationTimestamp() {
         return reservationTimestamp;
     }
 
-    public void setReservationTimestamp(ZonedDateTime reservationTimestamp) {
+    public void setReservationTimestamp(long reservationTimestamp) {
         this.reservationTimestamp = reservationTimestamp;
     }
 

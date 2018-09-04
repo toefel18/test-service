@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Component
 public class ScheduledTasks {
 
@@ -17,6 +19,6 @@ public class ScheduledTasks {
      */
     @Scheduled(fixedRate = 5000)
     public void cleanOutdatedReservation(){
-        reservationRepository.cleanExpiredReservations();
+        reservationRepository.cleanExpiredReservations(System.currentTimeMillis() - Duration.ofMinutes(30).toMillis());
     }
 }

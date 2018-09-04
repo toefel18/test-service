@@ -11,9 +11,8 @@ import java.util.Optional;
 public interface ReservationRepository extends CrudRepository<Reservation, Long> {
 
     // 1800 = 30 minutes in seconds
-    @Query(value = "DELETE FROM reservation " +
-            "WHERE EXTRACT(EPOCH FROM now() - reservation_timestamp) < 1800", nativeQuery = true)
-    long cleanExpiredReservations();
+    @Query(value = "DELETE FROM reservation WHERE reservation_timestamp < ?1", nativeQuery = true)
+    void cleanExpiredReservations(long maxAge);
 
     @Query("SELECT SUM(r.amount) FROM Reservation r" +
             " WHERE r.store.name = ?1" +

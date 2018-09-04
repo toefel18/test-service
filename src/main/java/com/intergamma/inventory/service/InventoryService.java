@@ -140,7 +140,6 @@ public class InventoryService {
     private void saveNewReservation(InventoryQueryResultDto inventory, String clientName, long amount) {
         LOG.info("Creating new inventory reservation for storeName={} productCode={} clientName={} amount={}",
                 inventory.storeName, inventory.productCode, clientName, amount);
-
         Optional<Store> store = storeRepository.findByName(inventory.storeName);
         Optional<Product> product = productRepository.findByProductCode(inventory.productCode);
         assertStoreAndProductExist(store, inventory.storeName, product, inventory.productCode);
@@ -148,6 +147,8 @@ public class InventoryService {
         long availableInventory = inventory.inventory - inventory.reserved;
 
         if (availableInventory < amount) {
+            LOG.info("Not enough available inventory, cannot make reservation storeName={} productCode={} clientName={} availableInventory={} desiredReservation={}",
+                    inventory.storeName, inventory.productCode, clientName, availableInventory, amount);
             throw new NotEnoughInventoryException(inventory.storeName, inventory.productCode, inventory.inventory, availableInventory);
         }
 
