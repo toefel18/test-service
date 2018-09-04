@@ -14,23 +14,23 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public Iterable<Product> findAll() {
             return productRepository.findAll();
     }
 
-    @GetMapping("/product/{productCode}")
+    @GetMapping("/products/{productCode}")
     public Optional<Product> findById(@PathVariable String productCode) {
         return productRepository.findByProductCode(productCode);
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public Product createNewProduct(@RequestBody Product product) {
         product.setId(null);
         return productRepository.save(product);
     }
 
-    @DeleteMapping("/product/{productCode}")
+    @DeleteMapping("/products/{productCode}")
     public ResponseEntity<Product> delete(@PathVariable String productCode) {
         Optional<Product> product = productRepository.findByProductCode(productCode);
         if (product.isPresent()) {

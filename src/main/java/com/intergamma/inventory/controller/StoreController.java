@@ -15,23 +15,23 @@ public class StoreController {
     @Autowired
     private StoreRepository storeRepository;
 
-    @GetMapping("/store")
+    @GetMapping("/stores")
     public Iterable<Store> findAll() {
             return storeRepository.findAll();
     }
 
-    @GetMapping("/store/{name}")
+    @GetMapping("/stores/{name}")
     public Optional<Store> findById(@PathVariable String name) {
         return storeRepository.findByName(name);
     }
 
-    @PostMapping("/store")
+    @PostMapping("/stores")
     public Store createNewStore(@RequestBody Store store) {
         store.setId(null);
         return storeRepository.save(store);
     }
 
-    @DeleteMapping("/store/{name}")
+    @DeleteMapping("/stores/{name}")
     public ResponseEntity<Store> delete(@PathVariable String name) {
         Optional<Store> store = storeRepository.findByName(name);
         if (store.isPresent()) {

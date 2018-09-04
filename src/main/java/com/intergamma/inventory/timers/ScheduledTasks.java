@@ -12,6 +12,9 @@ public class ScheduledTasks {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    /**
+     * Checks for outdated reservations every 5s.
+     */
     @Scheduled(fixedRate = 5000)
     public void cleanOutdatedReservation(){
         reservationRepository.cleanExpiredReservations();

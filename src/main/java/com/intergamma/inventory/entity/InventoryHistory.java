@@ -1,5 +1,7 @@
 package com.intergamma.inventory.entity;
 
+import com.intergamma.inventory.service.exception.InvalidAmountException;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
@@ -41,7 +43,7 @@ public class InventoryHistory {
         this.transactionTimestamp = ZonedDateTime.now();
         this.amount = amount;
         if (this.amount <= 0) {
-            throw new IllegalArgumentException("amount cannot be 0 or lower, but was " + amount);
+            throw new InvalidAmountException(amount);
         }
     }
 

@@ -1,13 +1,26 @@
 package com.intergamma.inventory.access;
 
-import com.intergamma.inventory.entity.InventoryHistoryType;
+import com.intergamma.inventory.entity.Reservation;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
-public interface ReservationRepository extends CrudRepository<ReservationRepository, Long> {
+@Transactional
+public interface ReservationRepository extends CrudRepository<Reservation, Long> {
 
-    long cleanExpiredReservations()
+    // 1800 = 30 minutes in seconds
+    @Query(value = "DELETE FROM reservation " +
+            "WHERE EXTRACT(EPOCH FROM now() - reservation_timestamp) < 1800", nativeQuery = true)
+    long cleanExpiredReservations();
 
+    @Query("SELECT SUM(r.amount) FROM Reservation r" +
+            " WHERE r.store.name = ?1" +
+            " AND r.product.productCode = ?2")
+    Optional<Long> calculateTotalAmountReserved(String storeName, String productCode);
+
+    void deleteByStore_NameAndProduct_ProductCodeAndClientName(String storeName, String productCode, String clientName);
+
+    Optional<Reservation> findByStore_NameAndProduct_ProductCodeAndClientName(String storeName, String productCode, String clientName);
 }

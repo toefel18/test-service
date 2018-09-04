@@ -1,6 +1,7 @@
 package com.intergamma.inventory.entity;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "reservation")
@@ -17,6 +18,23 @@ public class Reservation {
 
     @Column(nullable = false, updatable = false)
     private String clientName;
+
+    @Column(nullable = false, updatable = false)
+    private ZonedDateTime reservationTimestamp;
+
+    @Column(nullable = false, updatable = false)
+    private long amount;
+
+    public Reservation() {
+    }
+
+    public Reservation(Store store, Product product, String clientName, long amount) {
+        this.store = store;
+        this.product = product;
+        this.clientName = clientName;
+        this.amount = amount;
+        this.reservationTimestamp = ZonedDateTime.now();
+    }
 
     public Long getId() {
         return id;
@@ -48,5 +66,21 @@ public class Reservation {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public ZonedDateTime getReservationTimestamp() {
+        return reservationTimestamp;
+    }
+
+    public void setReservationTimestamp(ZonedDateTime reservationTimestamp) {
+        this.reservationTimestamp = reservationTimestamp;
+    }
+
+    public long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
     }
 }
