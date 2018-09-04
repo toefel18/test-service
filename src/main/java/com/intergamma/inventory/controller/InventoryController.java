@@ -40,7 +40,7 @@ public class InventoryController {
         inventoryService.reserveInventory(storeName, productCode, clientName, reservationAmount.amount);
     }
 
-    @DeleteMapping("/inventories/store/{storeName}/product/{productCode}/reservations/{clientName}")
+    @DeleteMapping("/inventories/stores/{storeName}/products/{productCode}/reservations/{clientName}")
     public void releaseProductInventory(@PathVariable String storeName,
                                         @PathVariable String productCode,
                                         @PathVariable String clientName) {

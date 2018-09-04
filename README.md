@@ -27,3 +27,7 @@ Integramma programming test
     
     curl -X GET -H 'Content-Type: application/json' "http://localhost:8080/inventories/stores/rotterdam/products/1166555798"
     curl -X PUT -H 'Content-Type: application/json' "http://localhost:8080/inventories/stores/rotterdam/products/1166555798" -d '{"amount": 5}'
+    
+    curl -X PUT -H 'Content-Type: application/json' "http://localhost:8080/inventories/stores/rotterdam/products/1166555798/reservations/kees" -d '{"amount": 3}'
+    curl -X GET -H 'Content-Type: application/json' "http://localhost:8080/inventories/stores/rotterdam/products/1166555798"
+    curl -X DELETE  "http://localhost:8080/inventories/stores/rotterdam/products/1166555798/reservations/kees"

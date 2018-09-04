@@ -55,7 +55,7 @@ public class InventoryService {
     }
 
     public void setInventory(String storeName, String productCode, String clientName, long amount) {
-        if(amount < 0) {
+        if (amount < 0) {
             throw new InvalidAmountException(amount);
         }
 
@@ -71,7 +71,7 @@ public class InventoryService {
             long delta = amount - actualInventory.get();
             if (delta < 0) {
                 addTransaction(new InventoryHistory(store.get(), product.get(), clientName, InventoryHistoryType.REMOVE, Math.abs(delta)));
-            } else if (delta > 0){
+            } else if (delta > 0) {
                 addTransaction(new InventoryHistory(store.get(), product.get(), clientName, InventoryHistoryType.ADD, delta));
             } else {
                 LOG.info("no transaction required to reach inventory with amount={}", amount);
@@ -108,7 +108,7 @@ public class InventoryService {
         if (existingReservation.isPresent()) {
             updateExistingReservation(inventory, existingReservation.get(), amount);
         } else {
-            saveNewReservation(storeName, productCode, clientName, amount);
+            saveNewReservation(inventory, clientName, amount);
         }
     }
 
@@ -128,13 +128,19 @@ public class InventoryService {
         existingReservation.setAmount(newAmount);
     }
 
-    private void saveNewReservation(String storeName, String productCode, String clientName, long amount) {
+    private void saveNewReservation(InventoryQueryResultDto inventory, String clientName, long amount) {
         LOG.info("Creating new inventory reservation for storeName={} productCode={} clientName={} amount={}",
-                storeName, productCode, clientName, amount);
+                inventory.storeName, inventory.productCode, clientName, amount);
 
-        Optional<Store> store = storeRepository.findByName(storeName);
-        Optional<Product> product = productRepository.findByProductCode(productCode);
-        assertStoreAndProductExist(store, storeName, product, productCode);
+        Optional<Store> store = storeRepository.findByName(inventory.storeName);
+        Optional<Product> product = productRepository.findByProductCode(inventory.productCode);
+        assertStoreAndProductExist(store, inventory.storeName, product, inventory.productCode);
+
+        long availableInventory = inventory.inventory - inventory.reserved;
+
+        if (availableInventory < amount) {
+            throw new NotEnoughInventoryException(inventory.storeName, inventory.productCode, inventory.inventory, availableInventory);
+        }
 
         Reservation newReservation = new Reservation(store.get(), product.get(), clientName, amount);
 
@@ -142,6 +148,7 @@ public class InventoryService {
     }
 
     public void releaseReservedInventory(String storeName, String productCode, String clientName) {
+        LOG.info("Deleting inventory reservations for storeName={} productCode={} clientName={}", storeName, productCode, clientName);
         reservationRepository.deleteByStore_NameAndProduct_ProductCodeAndClientName(storeName, productCode, clientName);
     }
 }

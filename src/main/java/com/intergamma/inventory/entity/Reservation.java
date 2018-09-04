@@ -22,7 +22,7 @@ public class Reservation {
     @Column(nullable = false, updatable = false)
     private ZonedDateTime reservationTimestamp;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private long amount;
 
     public Reservation() {
