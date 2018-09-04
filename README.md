@@ -37,8 +37,6 @@ Terms used:
 - inventory: the amount of actual goods present
 - availableInventory: the amount of actual goods minus the reserved goods.
 
-a timer 
-
 ## Missing pieces
 
 1. Preferred way of working is that a client reserves a product, then buys the product which should automatically cancel the 
@@ -47,6 +45,8 @@ a timer
    events. On ProductSold events, the reservations would be automatically cancelled. 
    
    It should not be possible for products to be sold without an open reservation!
+   
+1. Optional exercises (tests, spring security, oauth2)
 
 ## Using the application
 
