@@ -37,6 +37,8 @@ public class InventoryService {
      * the product.
      */
     public InventoryQueryResultDto calculateInventory(String storeName, String productCode) {
+        assertStoreAndProductCodeExists(storeName, productCode);
+
         Optional<Long> actualInventory = calculateActualInventory(storeName, productCode);
 
         if (actualInventory.isPresent()) {
@@ -45,6 +47,12 @@ public class InventoryService {
         } else {
             throw new ProductNotAvailableAtStoreException(storeName, productCode);
         }
+    }
+
+    private void assertStoreAndProductCodeExists(String storeName, String productCode) {
+        Optional<Store> store = storeRepository.findByName(storeName);
+        Optional<Product> product = productRepository.findByProductCode(productCode);
+        assertStoreAndProductExist(store, storeName, product, productCode);
     }
 
     private Optional<Long> calculateActualInventory(String storeName, String productCode) {
@@ -92,6 +100,7 @@ public class InventoryService {
     }
 
     public void clearInventory(String storeName, String productCode) {
+        assertStoreAndProductCodeExists(storeName, productCode);
         setInventory(storeName, productCode, "system", 0);
         //TODO clear reservations or block if reservations present?
     }
@@ -149,6 +158,9 @@ public class InventoryService {
 
     public void releaseReservedInventory(String storeName, String productCode, String clientName) {
         LOG.info("Deleting inventory reservations for storeName={} productCode={} clientName={}", storeName, productCode, clientName);
+
+        assertStoreAndProductCodeExists(storeName, productCode);
+
         reservationRepository.deleteByStore_NameAndProduct_ProductCodeAndClientName(storeName, productCode, clientName);
     }
 }
